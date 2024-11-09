@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gopi/config"
+	"gopi/internal/config"
 	"gopi/internal/server"
 	"log"
 )
