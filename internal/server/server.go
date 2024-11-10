@@ -1,5 +1,6 @@
 package server
 
+/*
 import (
 	"database/sql"
 	"errors"
@@ -138,3 +139,4 @@ func NewServer() *gin.Engine {
 	r.GET("/files/:uuid", getGifFile)
 	return r
 }
+*/
