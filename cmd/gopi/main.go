@@ -1,39 +1,62 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/exp/slog"
 	"gopi/internal/config"
+	l "gopi/internal/lib/middleware/logger"
 	"gopi/internal/server/handlers/save"
 	"gopi/internal/storage"
-	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
-	// Load configuration
-	cfg := config.LoadConfig()
+	gin.SetMode(gin.ReleaseMode)
 
-	// Connect to the database
+	cfg := config.LoadConfig()
+	log := setupPrettyLogger()
+
 	db, err := sql.Open("mysql", cfg.Database.Dsn)
 	if err != nil {
-		log.Fatal("Failed to connect to the database:", err)
+		log.Error("Failed to connect to the database", slog.String("error", err.Error()))
+		os.Exit(1)
 	}
 	defer db.Close()
 
-	// Initialize the storage layer with the DB connection
 	s := &storage.Storage{Db: db}
 
-	// Initialize the save handler
 	saveHandler := save.New(s)
 
-	// Create a new Gin router
 	r := gin.Default()
-
-	// Register the route with the handler
+	r.Use(l.New(log))
 	r.POST("/create", saveHandler)
 
-	// Run the Gin server
-	if err := r.Run(cfg.HTTPServer.Port); err != nil {
-		log.Fatal("Server startup error:", err)
-	}
+	go func() {
+		if err := r.Run(cfg.HTTPServer.Port); err != nil {
+			log.Error("Server startup error", slog.String("error", err.Error()))
+		}
+	}()
+
+	log.Info("Server started")
+
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
+	<-done
+	log.Info("Stopping server")
+
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	log.Info("Server stopped")
+}
+
+func setupPrettyLogger() *slog.Logger {
+	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})
+	return slog.New(handler)
 }

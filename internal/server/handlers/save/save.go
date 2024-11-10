@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"gopi/internal/lib/response"
+	r "gopi/internal/lib/response"
 )
 
 const (
@@ -21,7 +21,7 @@ type Request struct {
 }
 
 type Response struct {
-	response.Response
+	r.Response
 	UUID string `json:"uuid,omitempty"`
 	Path string `json:"path,omitempty"`
 }
@@ -35,7 +35,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if c.ContentType() != "application/json" {
 			c.JSON(
 				BadRequest,
-				response.Error("Invalid Content-Type. Expected application/json"),
+				r.Error("Invalid Content-Type. Expected application/json"),
 			)
 			return
 		}
@@ -44,7 +44,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if err := c.ShouldBindJSON(&jsonRequest); err != nil {
 			c.JSON(
 				BadRequest,
-				response.Error("Invalid JSON: "+err.Error()),
+				r.Error("Invalid JSON: "+err.Error()),
 			)
 			return
 		}
@@ -53,7 +53,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if _, err := os.Stat(filePath); os.IsNotExist(err) {
 			c.JSON(
 				BadRequest,
-				response.Error("File does not exist at the provided path"),
+				r.Error("File does not exist at the provided path"),
 			)
 			return
 		}
@@ -66,7 +66,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				ServerError,
-				response.Error("Failed to create directory: "+err.Error()),
+				r.Error("Failed to create directory: "+err.Error()),
 			)
 			return
 		}
@@ -75,7 +75,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				ServerError,
-				response.Error("Failed to open file: "+err.Error()),
+				r.Error("Failed to open file: "+err.Error()),
 			)
 			return
 		}
@@ -85,7 +85,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				ServerError,
-				response.Error("Failed to create output file: "+err.Error()),
+				r.Error("Failed to create output file: "+err.Error()),
 			)
 			return
 		}
@@ -95,7 +95,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				ServerError,
-				response.Error("Failed to save file: "+err.Error()),
+				r.Error("Failed to save file: "+err.Error()),
 			)
 			return
 		}
@@ -104,13 +104,13 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				ServerError,
-				response.Error("Failed to save GIF: "+err.Error()),
+				r.Error("Failed to save GIF: "+err.Error()),
 			)
 			return
 		}
 
 		c.JSON(http.StatusOK, Response{
-			Response: response.OK(),
+			Response: r.OK(),
 			UUID:     newGifUUID,
 			Path:     serverFilePath,
 		})
