@@ -33,7 +33,7 @@ func main() {
 
 	saveHandler := save.New(s)
 
-	r := gin.Default()
+	r := gin.New()
 	r.Use(l.New(log))
 	r.POST("/create", saveHandler)
 
