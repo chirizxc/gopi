@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/exp/slog"
 	"gopi/internal/config"
+	pl "gopi/internal/lib/handlers/prettyloger"
 	l "gopi/internal/lib/middleware/logger"
 	"gopi/internal/server/handlers/save"
 	"gopi/internal/storage"
@@ -19,7 +20,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 
 	cfg := config.LoadConfig()
-	log := setupPrettyLogger()
+	log := setupPrettySlog()
 
 	db, err := sql.Open("mysql", cfg.Database.Dsn)
 	if err != nil {
@@ -56,7 +57,14 @@ func main() {
 	log.Info("Server stopped")
 }
 
-func setupPrettyLogger() *slog.Logger {
-	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})
+func setupPrettySlog() *slog.Logger {
+	opts := pl.PrettyHandlerOptions{
+		SlogOpts: &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		},
+	}
+
+	handler := opts.NewPrettyHandler(os.Stdout)
+
 	return slog.New(handler)
 }

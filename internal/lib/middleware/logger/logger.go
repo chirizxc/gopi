@@ -17,7 +17,6 @@ func New(log *slog.Logger) gin.HandlerFunc {
 			slog.String("path", c.Request.URL.Path),
 			slog.String("remote_addr", c.ClientIP()),
 			slog.String("user_agent", c.Request.UserAgent()),
-			slog.String("request_id", c.Writer.Header().Get("X-Request-ID")),
 		)
 
 		start := time.Now()
