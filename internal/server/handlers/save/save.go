@@ -3,16 +3,17 @@ package save
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	r "gopi/internal/lib/response"
 	"net/http"
 	"os"
 	"path/filepath"
-
-	r "gopi/internal/lib/response"
+	"strings"
 )
 
 const (
-	BadRequest  = http.StatusBadRequest
-	ServerError = http.StatusInternalServerError
+	BadRequest        = http.StatusBadRequest
+	ServerError       = http.StatusInternalServerError
+	MaxFileSize int64 = 100 * 1024 * 1024 // 100 MB
 )
 
 type Request struct {
@@ -38,15 +39,27 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 			return
 		}
 
-		gifUUID := uuid.New().String()
-		serverFilePath := filepath.Join("gifs", gifUUID+".gif")
+		if c.Request.ContentLength > MaxFileSize {
+			c.JSON(BadRequest, r.FileTooLarge)
+			return
+		}
 
-		if err := os.MkdirAll(filepath.Dir(serverFilePath), os.ModePerm); err != nil {
+		_, fileHeader, err := c.Request.FormFile("file")
+
+		if !strings.HasSuffix(strings.ToLower(fileHeader.Filename), ".gif") {
+			c.JSON(BadRequest, r.InvalidFileFormat)
+			return
+		}
+
+		gifUUID := uuid.New().String()
+		filePath := filepath.Join("gifs", gifUUID+".gif")
+
+		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
 			c.JSON(ServerError, r.DirectoryCreationFailed)
 			return
 		}
 
-		outputFile, err := os.Create(serverFilePath)
+		outputFile, err := os.Create(filePath)
 		if err != nil {
 			c.JSON(ServerError, r.FileCreationFailed)
 			return
@@ -58,7 +71,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 			return
 		}
 
-		if _, err := gifSaver.SaveGif(gifUUID, serverFilePath); err != nil {
+		if _, err := gifSaver.SaveGif(gifUUID, filePath); err != nil {
 			c.JSON(ServerError, r.DatabaseSaveFailed)
 			return
 		}
@@ -66,7 +79,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		c.JSON(http.StatusOK, Response{
 			Response: r.OK(),
 			UUID:     gifUUID,
-			Path:     serverFilePath,
+			Path:     filePath,
 		})
 	}
 }

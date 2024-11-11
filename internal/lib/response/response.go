@@ -29,4 +29,6 @@ var (
 	FileCreationFailed      = Error("Failed to create output file for GIF")
 	FileSaveFailed          = Error("Failed to save binary file content")
 	DatabaseSaveFailed      = Error("Failed to save GIF metadata to the database")
+	FileTooLarge            = Error("File is too large. Maximum size is 100 MB")
+	InvalidFileFormat       = Error("Invalid file format. Only .gif files are allowed")
 )
