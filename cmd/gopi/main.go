@@ -33,6 +33,7 @@ func main() {
 
 	r := gin.New()
 	r.Use(l.New(log))
+
 	r.POST("/save", save.New(s))
 
 	go func() {

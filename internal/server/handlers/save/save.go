@@ -49,8 +49,8 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 			return
 		}
 
-		newGifUUID := uuid.New().String()
-		serverFilePath := filepath.Join("gifs", newGifUUID+".gif")
+		gifUUID := uuid.New().String()
+		serverFilePath := filepath.Join("gifs", gifUUID+".gif")
 
 		if err := os.MkdirAll(filepath.Dir(serverFilePath), os.ModePerm); err != nil {
 			c.JSON(ServerError, r.DirectoryCreationFailed)
@@ -76,14 +76,14 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 			return
 		}
 
-		if _, err := gifSaver.SaveGif(newGifUUID, serverFilePath); err != nil {
+		if _, err := gifSaver.SaveGif(gifUUID, serverFilePath); err != nil {
 			c.JSON(ServerError, r.DatabaseSaveFailed)
 			return
 		}
 
 		c.JSON(http.StatusOK, Response{
 			Response: r.OK(),
-			UUID:     newGifUUID,
+			UUID:     gifUUID,
 			Path:     serverFilePath,
 		})
 	}
