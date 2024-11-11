@@ -5,10 +5,33 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
+	"time"
 )
 
+type DB struct {
+	*sql.DB
+}
+
 type Storage struct {
-	Db *sql.DB
+	Db *DB
+}
+
+func NewDB(dsn string) (*DB, error) {
+
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open database: %w", err)
+	}
+
+	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
+
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("failed to ping database: %w", err)
+	}
+
+	return &DB{db}, nil
 }
 
 func (s *Storage) SaveGif(uuid string, path string) (int64, error) {

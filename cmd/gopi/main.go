@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/exp/slog"
 	"gopi/internal/config"
@@ -22,20 +21,18 @@ func main() {
 	cfg := config.LoadConfig()
 	log := setupPrettySlog()
 
-	db, err := sql.Open("mysql", cfg.Database.Dsn)
+	db, err := storage.NewDB(cfg.Database.Dsn)
 	if err != nil {
-		log.Error("Failed to connect to the database", slog.String("error", err.Error()))
+		log.Error("Failed to initialize database", slog.String("error", err.Error()))
 		os.Exit(1)
 	}
 	defer db.Close()
 
 	s := &storage.Storage{Db: db}
 
-	saveHandler := save.New(s)
-
 	r := gin.New()
 	r.Use(l.New(log))
-	r.POST("/create", saveHandler)
+	r.POST("/create", save.New(s))
 
 	go func() {
 		if err := r.Run(cfg.HTTPServer.Port); err != nil {
