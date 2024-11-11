@@ -33,79 +33,51 @@ type GifSaver interface {
 func New(gifSaver GifSaver) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.ContentType() != "application/json" {
-			c.JSON(
-				BadRequest,
-				r.Error("Invalid Content-Type. Expected application/json"),
-			)
+			c.JSON(BadRequest, r.InvalidContentType)
 			return
 		}
 
 		var jsonRequest Request
 		if err := c.ShouldBindJSON(&jsonRequest); err != nil {
-			c.JSON(
-				BadRequest,
-				r.Error("Invalid JSON: "+err.Error()),
-			)
+			c.JSON(BadRequest, r.InvalidJSON)
 			return
 		}
 
 		filePath := jsonRequest.Path
 		if _, err := os.Stat(filePath); os.IsNotExist(err) {
-			c.JSON(
-				BadRequest,
-				r.Error("File does not exist at the provided path"),
-			)
+			c.JSON(BadRequest, r.FileNotFound)
 			return
 		}
 
 		newGifUUID := uuid.New().String()
-
 		serverFilePath := filepath.Join("gifs", newGifUUID+".gif")
 
-		err := os.MkdirAll(filepath.Dir(serverFilePath), os.ModePerm)
-		if err != nil {
-			c.JSON(
-				ServerError,
-				r.Error("Failed to create directory: "+err.Error()),
-			)
+		if err := os.MkdirAll(filepath.Dir(serverFilePath), os.ModePerm); err != nil {
+			c.JSON(ServerError, r.DirectoryCreationFailed)
 			return
 		}
 
 		inputFile, err := os.Open(filePath)
 		if err != nil {
-			c.JSON(
-				ServerError,
-				r.Error("Failed to open file: "+err.Error()),
-			)
+			c.JSON(ServerError, r.FileOpenFailed)
 			return
 		}
 		defer inputFile.Close()
 
 		outputFile, err := os.Create(serverFilePath)
 		if err != nil {
-			c.JSON(
-				ServerError,
-				r.Error("Failed to create output file: "+err.Error()),
-			)
+			c.JSON(ServerError, r.FileCreationFailed)
 			return
 		}
 		defer outputFile.Close()
 
-		_, err = outputFile.ReadFrom(inputFile)
-		if err != nil {
-			c.JSON(
-				ServerError,
-				r.Error("Failed to save file: "+err.Error()),
-			)
+		if _, err := outputFile.ReadFrom(inputFile); err != nil {
+			c.JSON(ServerError, r.FileSaveFailed)
 			return
 		}
 
-		_, err = gifSaver.SaveGif(newGifUUID, serverFilePath)
-		if err != nil {
-			c.JSON(
-				ServerError,
-				r.Error("Failed to save GIF: "+err.Error()),
-			)
+		if _, err := gifSaver.SaveGif(newGifUUID, serverFilePath); err != nil {
+			c.JSON(ServerError, r.DatabaseSaveFailed)
 			return
 		}
 
