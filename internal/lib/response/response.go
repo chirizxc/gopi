@@ -31,4 +31,5 @@ var (
 	DatabaseSaveFailed      = Error("Failed to save GIF metadata to the database")
 	FileTooLarge            = Error("File is too large. Maximum size is 100 MB")
 	InvalidFileFormat       = Error("Invalid file format. Only .gif files are allowed")
+	FileNotFound            = Error("File not found")
 )

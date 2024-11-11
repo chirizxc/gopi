@@ -16,11 +16,6 @@ const (
 	MaxFileSize int64 = 100 * 1024 * 1024 // 100 MB
 )
 
-type Request struct {
-	Path string `json:"path" validate:"required"`
-	UUID string `json:"uuid,omitempty"`
-}
-
 type Response struct {
 	r.Response
 	UUID string `json:"uuid,omitempty"`
@@ -44,7 +39,12 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 			return
 		}
 
-		_, fileHeader, err := c.Request.FormFile("file")
+		file, fileHeader, err := c.Request.FormFile("file")
+		if err != nil {
+			c.JSON(BadRequest, r.FileNotFound)
+			return
+		}
+		defer file.Close()
 
 		if !strings.HasSuffix(strings.ToLower(fileHeader.Filename), ".gif") {
 			c.JSON(BadRequest, r.InvalidFileFormat)
