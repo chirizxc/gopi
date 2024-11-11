@@ -32,20 +32,9 @@ type GifSaver interface {
 
 func New(gifSaver GifSaver) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.ContentType() != "application/json" {
+		contentType := c.ContentType()
+		if contentType != "multipart/form-data" && contentType != "application/octet-stream" {
 			c.JSON(BadRequest, r.InvalidContentType)
-			return
-		}
-
-		var jsonRequest Request
-		if err := c.ShouldBindJSON(&jsonRequest); err != nil {
-			c.JSON(BadRequest, r.InvalidJSON)
-			return
-		}
-
-		filePath := jsonRequest.Path
-		if _, err := os.Stat(filePath); os.IsNotExist(err) {
-			c.JSON(BadRequest, r.FileNotFound)
 			return
 		}
 
@@ -57,13 +46,6 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 			return
 		}
 
-		inputFile, err := os.Open(filePath)
-		if err != nil {
-			c.JSON(ServerError, r.FileOpenFailed)
-			return
-		}
-		defer inputFile.Close()
-
 		outputFile, err := os.Create(serverFilePath)
 		if err != nil {
 			c.JSON(ServerError, r.FileCreationFailed)
@@ -71,7 +53,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		}
 		defer outputFile.Close()
 
-		if _, err := outputFile.ReadFrom(inputFile); err != nil {
+		if _, err := outputFile.ReadFrom(c.Request.Body); err != nil {
 			c.JSON(ServerError, r.FileSaveFailed)
 			return
 		}

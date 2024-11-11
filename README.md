@@ -4,7 +4,9 @@
 
 ### 1. Загрузка GIF
 ```bash
-curl -X POST http://localhost:1111/save -H "Content-Type: application/json" -d '{"path": "<path>"}'
+curl -X POST http://localhost:1111/save -F "file=@<path>"
+
+curl -X POST http://localhost:1111/save -H "Content-Type: application/octet-stream" --data-binary "@<path>"
 ```
 ### 2. Получение всех путей и `uuid` GIF-изображений.
 ```bash

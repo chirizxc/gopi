@@ -31,13 +31,13 @@ func main() {
 
 	s := &storage.Storage{Db: db}
 
-	r := gin.New()
-	r.Use(l.New(log))
+	router := gin.New()
+	router.Use(l.New(log))
 
-	r.POST("/save", save.New(s))
+	router.POST("/save", save.New(s))
 
 	go func() {
-		if err := r.Run(fmt.Sprintf(":%s", cfg.HTTPServer.Port)); err != nil {
+		if err := router.Run(fmt.Sprintf(":%s", cfg.HTTPServer.Port)); err != nil {
 			log.Error("Server startup error", slog.String("error", err.Error()))
 		}
 	}()

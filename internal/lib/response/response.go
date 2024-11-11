@@ -24,12 +24,9 @@ func Error(msg string) Response {
 }
 
 var (
-	InvalidContentType      = Error("Invalid Content-Type. Expected application/json")
-	InvalidJSON             = Error("Invalid JSON format")
-	FileNotFound            = Error("File does not exist at the provided path")
-	DirectoryCreationFailed = Error("Failed to create directory")
-	FileOpenFailed          = Error("Failed to open file")
-	FileCreationFailed      = Error("Failed to create output file")
-	FileSaveFailed          = Error("Failed to save file")
-	DatabaseSaveFailed      = Error("Failed to save GIF to database")
+	InvalidContentType      = Error("Invalid Content-Type. Expected multipart/form-data or application/octet-stream")
+	DirectoryCreationFailed = Error("Failed to create directory for saving the GIF")
+	FileCreationFailed      = Error("Failed to create output file for GIF")
+	FileSaveFailed          = Error("Failed to save binary file content")
+	DatabaseSaveFailed      = Error("Failed to save GIF metadata to the database")
 )
