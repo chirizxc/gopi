@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/exp/slog"
 	"gopi/internal/config"
@@ -32,10 +33,10 @@ func main() {
 
 	r := gin.New()
 	r.Use(l.New(log))
-	r.POST("/create", save.New(s))
+	r.POST("/save", save.New(s))
 
 	go func() {
-		if err := r.Run(cfg.HTTPServer.Port); err != nil {
+		if err := r.Run(fmt.Sprintf(":%s", cfg.HTTPServer.Port)); err != nil {
 			log.Error("Server startup error", slog.String("error", err.Error()))
 		}
 	}()

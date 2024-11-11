@@ -4,7 +4,7 @@
 
 ### 1. Загрузка GIF
 ```bash
-curl -X POST http://localhost:1111/create -F "gif=@<path>/assets/xd.gif"
+curl -X POST http://localhost:1111/create -H "Content-Type: application/json" -d '{"path": "<path>"}'
 ```
 ### 2. Получение всех путей и `uuid` GIF-изображений.
 ```bash
