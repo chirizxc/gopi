@@ -62,3 +62,17 @@ func (s *Storage) SaveGif(uuid string, path string) (int64, string, error) {
 
 	return id, alias, nil
 }
+
+func (s *Storage) GetGifByAliasOrUUID(id string) (string, error) {
+	var path string
+	query := "SELECT path FROM gifs WHERE uuid = ? OR alias = ? LIMIT 1"
+
+	err := s.Db.QueryRow(query, id, id).Scan(&path)
+	if errors.Is(err, sql.ErrNoRows) {
+		return "", fmt.Errorf("gif not found for identifier: %s", id)
+	} else if err != nil {
+		return "", fmt.Errorf("failed to query database: %w", err)
+	}
+
+	return path, nil
+}

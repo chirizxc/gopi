@@ -67,7 +67,7 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 		}
 		defer outputFile.Close()
 
-		if _, err := outputFile.ReadFrom(c.Request.Body); err != nil {
+		if _, err := outputFile.ReadFrom(file); err != nil {
 			c.JSON(ServerError, r.FileSaveFailed)
 			return
 		}

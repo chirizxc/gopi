@@ -32,4 +32,6 @@ var (
 	FileTooLarge            = Error("File is too large. Maximum size is 100 MB")
 	InvalidFileFormat       = Error("Invalid file format. Only .gif files are allowed")
 	FileNotFound            = Error("File not found")
+	GifNotFound             = Error("GIF not found")
+	ServerGifNotFound       = Error("GIF file not found on server")
 )
