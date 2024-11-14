@@ -18,12 +18,13 @@ const (
 
 type Response struct {
 	r.Response
-	UUID string `json:"uuid,omitempty"`
-	Path string `json:"path,omitempty"`
+	Alias string `json:"alias,omitempty"`
+	UUID  string `json:"uuid,omitempty"`
+	Path  string `json:"path,omitempty"`
 }
 
 type GifSaver interface {
-	SaveGif(uuid string, path string) (int64, error)
+	SaveGif(uuid string, path string) (int64, string, error)
 }
 
 func New(gifSaver GifSaver) gin.HandlerFunc {
@@ -71,13 +72,15 @@ func New(gifSaver GifSaver) gin.HandlerFunc {
 			return
 		}
 
-		if _, err := gifSaver.SaveGif(gifUUID, filePath); err != nil {
+		_, alias, err := gifSaver.SaveGif(gifUUID, filePath)
+		if err != nil {
 			c.JSON(ServerError, r.DatabaseSaveFailed)
 			return
 		}
 
 		c.JSON(http.StatusOK, Response{
 			Response: r.OK(),
+			Alias:    alias,
 			UUID:     gifUUID,
 			Path:     filePath,
 		})
