@@ -14,9 +14,9 @@ type GifGetter interface {
 
 func New(gifGetter GifGetter) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		identifier := c.Param("id")
+		id := c.Param("id")
 
-		path, err := gifGetter.GetGifByAliasOrUUID(identifier)
+		path, err := gifGetter.GetGifByAliasOrUUID(id)
 		if err != nil {
 			c.JSON(http.StatusNotFound, r.GifNotFound)
 			return
