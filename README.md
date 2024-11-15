@@ -5,16 +5,14 @@
 ### 1. Загрузка GIF
 ```bash
 curl -X POST http://localhost:1111/save -F "file=@<path>"
-
-curl -X POST http://localhost:1111/save -H "Content-Type: application/octet-stream" --data-binary "@<path>"
 ```
 ### 2. Получение всех путей и `uuid` GIF-изображений.
 ```bash
 curl http://localhost:1111/gifs
 ```
-### 3. Получение конкретного GIF по UUID
+### 3. Получение конкретного GIF по `uuid` или по его `alias`
 ```bash
-curl curl http://localhost:1111/files/<uuid>
+curl curl http://localhost:1111/gif/<uuid or alias>
 ```
 
 ## TODO:
