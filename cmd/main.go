@@ -8,7 +8,8 @@ import (
 	"gopi/internal/config"
 	pl "gopi/internal/lib/handlers/prettyloger"
 	l "gopi/internal/lib/middleware/logger"
-	"gopi/internal/server/handlers/get"
+	"gopi/internal/server/handlers/get/gif"
+	"gopi/internal/server/handlers/get/gifs"
 	"gopi/internal/server/handlers/save"
 	"gopi/internal/storage"
 	"os"
@@ -36,7 +37,8 @@ func main() {
 	router.Use(l.New(log))
 
 	router.POST("/save", save.New(s))
-	router.GET("/gif/:id", get.New(s))
+	router.GET("/gif/:id", gif.New(s))
+	router.GET("/gifs", gifs.New(s))
 
 	go func() {
 		if err := router.Run(fmt.Sprintf(":%s", cfg.HTTPServer.Port)); err != nil {

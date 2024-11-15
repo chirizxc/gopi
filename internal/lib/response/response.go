@@ -34,4 +34,5 @@ var (
 	FileNotFound            = Error("File not found")
 	GifNotFound             = Error("GIF not found")
 	ServerGifNotFound       = Error("GIF file not found on server")
+	AliasNotFound           = Error("Failed to fetch aliases")
 )
