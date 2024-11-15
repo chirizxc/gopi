@@ -10,7 +10,7 @@ curl -X POST http://localhost:1111/save -F "file=@<path>"
 ```bash
 curl http://localhost:1111/gifs
 ```
-### 3. Получение конкретного GIF по `uuid` или по его `alias`
+### 3. Получение конкретного GIF по `uuid` или `alias`
 ```bash
 curl curl http://localhost:1111/gif/<uuid or alias>
 ```
