@@ -76,3 +76,37 @@ func (s *Storage) GetGifByAliasOrUUID(id string) (string, error) {
 
 	return path, nil
 }
+
+func (s *Storage) GetAllAliases() ([]string, error) {
+	const op = "storage.mysql.GetAllAliases"
+
+	query := "SELECT alias FROM gifs"
+
+	rows, err := s.Db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("%s: failed to query database: %w", op, err)
+	}
+	defer rows.Close()
+
+	var aliases []string
+
+	for rows.Next() {
+		var alias string
+
+		if err := rows.Scan(&alias); err != nil {
+			return nil, fmt.Errorf("%s: failed to scan row: %w", op, err)
+		}
+
+		aliases = append(aliases, alias)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("%s: row iteration error: %w", op, err)
+	}
+
+	if len(aliases) == 0 {
+		return nil, fmt.Errorf("%s: no aliases found", op)
+	}
+
+	return aliases, nil
+}
