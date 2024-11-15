@@ -1,4 +1,4 @@
-package get_gif
+package get
 
 import (
 	"github.com/gin-gonic/gin"
