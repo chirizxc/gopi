@@ -4,23 +4,23 @@
 
 ### 1. Загрузка GIF
 ```bash
-curl -X POST http://localhost:1111/create -F "gif=@<path>/assets/xd.gif"
+curl -X POST http://localhost:1111/save -F "file=@<path>"
 ```
 ### 2. Получение всех путей и `uuid` GIF-изображений.
 ```bash
 curl http://localhost:1111/gifs
 ```
-### 3. Получение конкретного GIF по UUID
+### 3. Получение конкретного GIF по `uuid` или `alias`
 ```bash
-curl curl http://localhost:1111/files/<uuid>
+curl http://localhost:1111/gif/<uuid or alias>
 ```
 
 ## TODO:
 
-- [ ] Перенести логику работы с БД в другой модуль 
-- [ ] Переписать структуру БД
+- [x] Перенести логику работы с БД в другой модуль 
+- [x] Переписать структуру БД
 - [ ] Сделать для каждого `UUID` alias
-- [ ] Добавить логгер [???](https://t.me/c/2420815282/926)
+- [x] Добавить логгер [???](https://t.me/c/2420815282/926)
 - [ ] Добавить авторизацию
 - [ ] Добавить метод для удаления GIF
 - [ ] Добавить тесты

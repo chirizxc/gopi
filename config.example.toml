@@ -1,7 +1,7 @@
-[path]
-storage = "path_to_storage"
+[database]
+MYSQL_DSN="root:password@tcp(localhost:3306)/gopi"
 
 [http_server]
-address = "127.0.0.1:1488"
-user = "user"
-pass = "123456789"
+PORT = "8000"
+USER = "xd"
+PASS = "xd"
