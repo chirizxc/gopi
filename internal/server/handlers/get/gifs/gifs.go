@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+const (
+	ServerError = http.StatusInternalServerError
+	StatusOK    = http.StatusOK
+)
+
 type AliasGetter interface {
 	GetAllAliases() ([]string, error)
 }
@@ -14,10 +19,10 @@ func New(aliasGetter AliasGetter) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		aliases, err := aliasGetter.GetAllAliases()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, r.AliasNotFound)
+			c.JSON(ServerError, r.AliasNotFound)
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"aliases": aliases})
+		c.JSON(StatusOK, gin.H{"aliases": aliases})
 	}
 }
