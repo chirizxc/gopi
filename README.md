@@ -14,13 +14,7 @@ curl http://localhost:1111/gifs
 ```bash
 curl http://localhost:1111/gif/<uuid or alias>
 ```
-
-## TODO:
-
-- [x] Перенести логику работы с БД в другой модуль 
-- [x] Переписать структуру БД
-- [ ] Сделать для каждого `UUID` alias
-- [x] Добавить логгер [???](https://t.me/c/2420815282/926)
-- [ ] Добавить авторизацию
-- [ ] Добавить метод для удаления GIF
-- [ ] Добавить тесты
+### 4. Удаление GIF по `uuid` или `alias`
+```bash
+curl http://localhost:1111/delete/<uuid or alias>
+```
