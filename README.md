@@ -16,5 +16,5 @@ curl http://localhost:1111/gif/<uuid or alias>
 ```
 ### 4. Удаление GIF по `uuid` или `alias`
 ```bash
-curl http://localhost:1111/delete/<uuid or alias>
+curl -X DELETE http://localhost:1111/delete/<uuid or alias> -u user:pass
 ```
