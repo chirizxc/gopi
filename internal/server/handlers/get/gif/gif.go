@@ -8,6 +8,10 @@ import (
 	"path/filepath"
 )
 
+const (
+	StatusNotFound = http.StatusNotFound
+)
+
 type GifGetter interface {
 	GetGifByAliasOrUUID(id string) (string, error)
 }
@@ -18,12 +22,12 @@ func New(gifGetter GifGetter) gin.HandlerFunc {
 
 		path, err := gifGetter.GetGifByAliasOrUUID(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, r.GifNotFound)
+			c.JSON(StatusNotFound, r.GifNotFound)
 			return
 		}
 
 		if _, err := os.Stat(path); os.IsNotExist(err) {
-			c.JSON(http.StatusNotFound, r.ServerGifNotFound)
+			c.JSON(StatusNotFound, r.ServerGifNotFound)
 			return
 		}
 

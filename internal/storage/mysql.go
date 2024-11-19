@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"gopi/internal/lib/random"
+	"os"
 	"time"
 )
 
@@ -109,4 +110,41 @@ func (s *Storage) GetAllAliases() ([]string, error) {
 	}
 
 	return aliases, nil
+}
+
+func (s *Storage) DeleteGif(id string) error {
+	const op = "storage.mysql.Delete"
+
+	path, err := s.GetGifByAliasOrUUID(id)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	query := "DELETE FROM gifs WHERE uuid = ? OR alias = ? LIMIT 1"
+	stmt, err := s.Db.Prepare(query)
+	if err != nil {
+		return fmt.Errorf("%s: failed to prepare delete query: %w", op, err)
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec(id, id)
+	if err != nil {
+		return fmt.Errorf("%s: failed to execute delete statement: %w", op, err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("%s: failed to retrieve rows affected: %w", op, err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("%s: no rows deleted for identifier: %s", op, id)
+	}
+
+	err = os.Remove(path)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("%s: failed to delete file from local storage: %w", op, err)
+	}
+
+	return nil
 }
