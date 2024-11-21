@@ -1,3 +1,6 @@
 .idea/
 gifs/
 config.toml
+node_modules/
+*.lockb
+/docs/.vitepress/cache/
