@@ -21,5 +21,5 @@ curl -X DELETE http://localhost:1111/delete/<uuid or alias> -u user:pass
 
 ## Документация
 ```bash
-bun install --dev && vitepress dev docs
+bun install --dev && bun run docs:dev
 ```
