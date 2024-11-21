@@ -18,8 +18,3 @@ curl http://localhost:1111/gif/<uuid or alias>
 ```bash
 curl -X DELETE http://localhost:1111/delete/<uuid or alias> -u user:pass
 ```
-
-## Документация
-```bash
-bun install --dev && bun run docs:dev
-```
