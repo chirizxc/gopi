@@ -6,7 +6,9 @@ hero:
   text: "API для работы с GIF"
   image:
     src: /logo.png
-    style: "margin-top: 40px;"
+    style: "margin-top: 40px;
+            filter: drop-shadow(0 0 50px rgba(255, 202, 202, 0.7));
+            animation: glow 1s infinite alternate;"
   actions:
     - theme: brand
       text: Примеры работы с API
