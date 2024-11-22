@@ -6,8 +6,9 @@ hero:
   text: "API для работы с GIF"
   image:
     src: /logo.png
+    style: "margin-top: 40px;"
   actions:
-    - theme: alt
+    - theme: brand
       text: Примеры работы с API
       link: /api-examples
 ---
@@ -50,7 +51,7 @@ const members = [
 
 <h2 class="center-heading">Team</h2>
 
-<VPTeamMembers size="small" :members="members" />
+<VPTeamMembers size="small" :members="members"></VPTeamMembers>
 
 <style scoped>
 .center-heading {
