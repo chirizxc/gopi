@@ -1,49 +1,55 @@
----
-outline: deep
----
-
-# Runtime API Examples
-
-This page demonstrates usage of some of the runtime APIs provided by VitePress.
-
-The main `useData()` API can be used to access site, theme, and page data for the current page. It works in both `.md` and `.vue` files:
-
-```md
-<script setup>
-import { useData } from 'vitepress'
-
-const { theme, page, frontmatter } = useData()
-</script>
-
-## Results
-
-### Theme Data
-<pre>{{ theme }}</pre>
-
-### Page Data
-<pre>{{ page }}</pre>
-
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
-```
+# Примеры работы с API GoPI
 
 <script setup>
 import { useData } from 'vitepress'
-
 const { site, theme, page, frontmatter } = useData()
 </script>
 
-## Results
+<style>
+.api-endpoint {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
 
-### Theme Data
-<pre>{{ theme }}</pre>
+.get {
+  background-color: #8F00FF;
+}
 
-### Page Data
-<pre>{{ page }}</pre>
+.post {
+  background-color: #49cc90;
+}
 
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
+.put {
+  background-color: #fca130;
+}
 
-## More
+.delete {
+  background-color: #f93e3e;
+}
+</style>
 
-Check out the documentation for the [full list of runtime APIs](https://vitepress.dev/reference/runtime-api#usedata).
+## API Команды
+
+### 1. <span class="api-endpoint post"> POST</span> Загрузка GIF
+```bash
+curl -X POST http://localhost:1111/save -F "file=@<path>"
+```
+
+### 2. <span class="api-endpoint get"> GET</span> Получение всех UUID GIF-изображений
+```bash
+curl http://localhost:1111/gifs
+```
+
+### 3. <span class="api-endpoint get"> GET</span> Получение конкретного GIF по UUID или Alias
+```bash
+curl http://localhost:1111/gif/<uuid or alias>
+```
+
+### 4. <span class="api-endpoint delete"> DELETE</span> Удаление GIF по UUID или Alias
+```bash
+curl -X DELETE http://localhost:1111/delete/<uuid or alias> -u user:pass
+```
