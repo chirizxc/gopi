@@ -23,10 +23,6 @@ const { site, theme, page, frontmatter } = useData()
   background-color: #49cc90;
 }
 
-.put {
-  background-color: #fca130;
-}
-
 .delete {
   background-color: #f93e3e;
 }
