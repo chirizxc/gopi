@@ -6,7 +6,7 @@
 ```bash
 curl -X POST http://localhost:1111/save -F "file=@<path>"
 ```
-### 2. Получение всех путей и `uuid` GIF-изображений.
+### 2. Получение всех `uuid` GIF-изображений.
 ```bash
 curl http://localhost:1111/gifs
 ```
