@@ -1,0 +1,10 @@
+FROM mysql:8.0
+
+# Копируем конфигурационный файл
+COPY my.cnf /etc/mysql/my.cnf
+
+# Копируем скрипт инициализации
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# Устанавливаем права на конфигурационный файл
+RUN chmod 644 /etc/mysql/my.cnf

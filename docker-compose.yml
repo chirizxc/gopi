@@ -1,0 +1,35 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: gopi
+    volumes:
+      - ./my.cnf:/etc/mysql/my.cnf
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    ports:
+      - "3308:3308"
+
+
+  app:
+    build:
+      context: .
+    container_name: go_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3308
+      - DB_USER=root
+      - DB_PASSWORD=example
+      - DB_NAME=gopi
+
+volumes:
+  db_data:
