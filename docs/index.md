@@ -6,8 +6,8 @@ hero:
   text: "API для работы с GIF"
   image:
     src: /logo.png
-    style: "margin-top: 40px;
-            filter: drop-shadow(0 0 50px rgba(255, 202, 202, 0.7));"
+    style: "margin-top: 30px;"
+    
   actions:
     - theme: brand
       text: Примеры работы с API
@@ -57,6 +57,6 @@ const members = [
 <style scoped>
 .center-heading {
   text-align: center;
-  margin-bottom: 2rem; /* Add space between the heading and team members */
+  margin-bottom: 2rem;
 }
 </style>
