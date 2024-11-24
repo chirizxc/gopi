@@ -64,7 +64,7 @@
             var(--vp-c-brand-next)
     );
     --vp-home-hero-image-filter: blur(42px);
-    --vp-home-hero-image-margin-top: 33px;
+    --vp-home-hero-image-margin-top: 38px;
 }
 
 .image-bg {

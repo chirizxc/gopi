@@ -20,11 +20,6 @@ curl http://localhost:1111/gif/<uuid or alias>
 curl -X DELETE http://localhost:1111/delete/<uuid or alias> -u user:pass
 ```
 
-<script setup>
-import { useData } from 'vitepress'
-const { site, theme, page, frontmatter } = useData()
-</script>
-
 <style>
 .api-endpoint {
   font-family: Arial, sans-serif;
