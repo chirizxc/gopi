@@ -63,24 +63,12 @@
             var(--vp-c-brand-1) 30%,
             var(--vp-c-brand-next)
     );
+    --vp-home-hero-image-filter: blur(42px);
     --vp-home-hero-image-margin-top: 33px;
 }
 
-.image-bg  {
+.image-bg {
     margin-top: var(--vp-home-hero-image-margin-top);
-}
-
-
-@media (min-width: 640px) {
-    :root {
-        --vp-home-hero-image-filter: blur(42px);
-    }
-}
-
-@media (min-width: 960px) {
-    :root {
-        --vp-home-hero-image-filter: blur(42px);
-    }
 }
 
 /* Safari has a very bad performance on gradient and filter */
