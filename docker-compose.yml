@@ -10,7 +10,7 @@ services:
       MYSQL_DATABASE: gopi
     volumes:
       - ./my.cnf:/etc/mysql/my.cnf
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/mysql
     ports:
       - "3308:3308"

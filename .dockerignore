@@ -1,0 +1,7 @@
+docs/
+assets/
+.github/
+.idea/
+package.json
+example.config.toml
+README.md
