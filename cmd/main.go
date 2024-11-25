@@ -21,40 +21,42 @@ import (
 )
 
 func main() {
-	fmt.Println("Waiting for dependencies to initialize...")
+	// Замена fmt.Println на логирование
+	log := setupPrettySlog()
+	log.Info("Waiting for dependencies to initialize...")
+
 	time.Sleep(10 * time.Second) // Ожидание 10 секунд
-	fmt.Println("Starting the application...")
+	log.Info("Starting the application...")
 
 	gin.SetMode(gin.ReleaseMode)
 
 	cfg := config.LoadConfig()
-	fmt.Println("Imported config package successfully.") // Сообщение о успешном импорте
+	log.Info("Imported config package successfully.") // Логирование успешного импорта
 
-	log := setupPrettySlog()
-	fmt.Println("Imported prettyloger package successfully.") // Сообщение о успешном импорте
-
+	// Логирование ошибок и успешных сообщений
 	db, err := storage.NewDB(cfg.Database.Dsn)
 	if err != nil {
 		log.Error("Failed to initialize database", slog.String("error", err.Error()))
 		os.Exit(1)
 	}
 	defer db.Close()
-	fmt.Println("Imported storage package and initialized DB successfully.") // Сообщение о успешном импорте
+	log.Info("Imported storage package and initialized DB successfully.")
 
 	s := &storage.Storage{Db: db}
 	authMiddleware := auth.New(cfg.HTTPServer.User, cfg.HTTPServer.Pass)
-	fmt.Println("Imported auth middleware package successfully.") // Сообщение о успешном импорте
+	log.Info("Imported auth middleware package successfully.")
 
 	router := gin.New()
 	router.Use(l.New(log))
-	fmt.Println("Imported logger middleware package successfully.") // Сообщение о успешном импорте
+	log.Info("Imported logger middleware package successfully.")
 
 	router.POST("/save", save.New(s))
 	router.DELETE("/delete/:id", authMiddleware, del.New(s))
 	router.GET("/gif/:id", gif.New(s))
 	router.GET("/gifs", gifs.New(s))
-	fmt.Println("Imported server handler packages (save, delete, gif, gifs) successfully.") // Сообщение о успешном импорте
+	log.Info("Imported server handler packages (save, delete, gif, gifs) successfully.")
 
+	// Логирование старта сервера
 	go func() {
 		if err := router.Run(fmt.Sprintf(":%s", cfg.HTTPServer.Port)); err != nil {
 			log.Error("Server startup error", slog.String("error", err.Error()))
@@ -63,6 +65,7 @@ func main() {
 
 	log.Info("Server started")
 
+	// Ожидание сигналов для завершения работы
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
