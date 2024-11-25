@@ -22,6 +22,7 @@ func New(aliasGetter AliasGetter) gin.HandlerFunc {
 			c.JSON(ServerError, r.AliasNotFound)
 			return
 		}
+
 		c.JSON(StatusOK, gin.H{"aliases": aliases})
 	}
 }
